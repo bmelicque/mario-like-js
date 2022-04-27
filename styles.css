@@ -1,0 +1,28 @@
+* {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    display: grid;
+    place-content: center;
+}
+
+#world {
+    --world-to-pixel-scale: 1px;
+    font-size: var(--world-to-pixel-scale);
+    border: 1px solid black;
+    overflow: hidden;
+    position: relative;
+}
+
+.player {
+    background-color: red;
+    position: absolute;
+}
+
+.platform {
+    position: absolute;
+    background-color: blue;
+}
