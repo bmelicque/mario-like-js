@@ -1,7 +1,11 @@
-import { levelPlatforms } from "./lib/levels/level-1.js";
+import detectCollision from "./collision.js";
+import Goal from "./goal.js";
+import { levelGoal, levelPlatforms } from "./lib/levels/level-1.js";
 import Platform from "./platform.js";
-import Player, { GRAVITY, MOVEMENT_SPEED } from "./player.js";
+import Player from "./player.js";
 
+const MAX_X = 50;
+const MIN_X = 15;
 export const WORLD_WIDTH = 100;
 export const WORLD_HEIGHT = 55;
 
@@ -25,8 +29,7 @@ function setPixelToWorldScale() {
 	worldElement.style.height = `${WORLD_HEIGHT * worldToPixelScale}px`;
 }
 
-const player = new Player();
-player.draw();
+const goal = new Goal({ ...levelGoal });
 const platforms = levelPlatforms.map(
 	(platform, index) =>
 		new Platform({
@@ -34,7 +37,11 @@ const platforms = levelPlatforms.map(
 			id: index,
 		})
 );
+const player = new Player();
+
+goal.draw();
 platforms.forEach((platform) => platform.draw());
+player.draw();
 
 const pressedKeys = {
 	right: false,
@@ -42,6 +49,7 @@ const pressedKeys = {
 };
 
 let lastTime;
+let scrollOffset = 0;
 function animate(time) {
 	if (!lastTime) {
 		lastTime = time;
@@ -50,13 +58,27 @@ function animate(time) {
 	}
 	const delta = (time - lastTime) / 1000; // in seconds
 
-	player.move(pressedKeys, platforms, delta);
+	player.move(pressedKeys, delta);
+
+	if (player.position.y + player.height >= WORLD_HEIGHT) player.reset();
 
 	player.airborne = true;
 	platforms.forEach((platform) => platform.handleCollision(player, delta));
 
+	const levelElement = document.querySelector("[data-level]");
+
 	player.update(delta);
-	platforms.forEach((platform) => platform.update(delta));
+	if (player.position.x > scrollOffset + MAX_X) {
+		scrollOffset = player.position.x - MAX_X;
+		levelElement.style.transform = `translateX(-${scrollOffset}em)`;
+	} else if (player.position.x < scrollOffset + MIN_X && scrollOffset > 0) {
+		scrollOffset = player.position.x - MIN_X;
+		levelElement.style.transform = `translateX(-${scrollOffset}em)`;
+	}
+
+	if (detectCollision(player, goal, delta)) {
+		console.log("you win!");
+	}
 
 	lastTime = time;
 	requestAnimationFrame(animate);

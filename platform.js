@@ -1,4 +1,11 @@
+import {
+	platformBodyElement,
+	platformTopElement,
+} from "./assets/platformElement.js";
 import detectCollision, { DIRECTIONS } from "./collision.js";
+
+const COLUMN_WIDTH = 20;
+const ROW_HEIGHT = 12;
 
 export default class Platform {
 	constructor({ position, width, height, isSolid, id }) {
@@ -16,20 +23,37 @@ export default class Platform {
 	draw() {
 		const platformElement = document.createElement("div");
 		platformElement.classList.add("platform");
+		const columns = Math.ceil(this.width / COLUMN_WIDTH);
+		const rows = Math.ceil(this.height / ROW_HEIGHT);
+		platformElement.style.setProperty("--columns", columns);
+		platformElement.style.setProperty("--rows", rows);
+		platformElement.style.setProperty("--column-width", COLUMN_WIDTH + "em");
+		platformElement.style.setProperty("--row-height", ROW_HEIGHT + "em");
+		for (let i = 0; i < columns; i++) {
+			platformElement.innerHTML += platformTopElement;
+		}
+		const loops = columns * (rows - 1);
+		for (let i = 0; i < loops; i++) {
+			platformElement.innerHTML += platformBodyElement;
+		}
+		// platformElement.innerHTML = platformInnerHTML;
 		platformElement.dataset.platform = this.id;
 		platformElement.style.transform = `translate(${this.position.x}em, ${this.position.y}em)`;
 		platformElement.style.width = `${this.width}em`;
 		platformElement.style.height = `${this.height}em`;
+
 		document.querySelector("[data-level]").appendChild(platformElement);
 	}
 
-	update(delta) {
+	update(offset, delta) {
 		this.position.x += this.velocity.x * delta;
 
 		const platformElement = document.querySelector(
 			`[data-platform="${this.id}"]`
 		);
-		platformElement.style.transform = `translate(${this.position.x}em, ${this.position.y}em)`;
+		platformElement.style.transform = `translate(${
+			this.position.x - offset
+		}em, ${this.position.y}em)`;
 	}
 
 	handleCollision(player, delta) {
@@ -47,12 +71,10 @@ export default class Platform {
 			player.position.y = this.position.y + this.height;
 		}
 		if (direction === DIRECTIONS.FROM_LEFT) {
-            console.log("from left");
 			player.velocity.x = 0;
 			player.position.x = this.position.x - player.width;
 		}
 		if (direction === DIRECTIONS.FROM_RIGHT) {
-            console.log("from right");
 			player.velocity.x = 0;
 			player.position.x = this.position.x + this.width;
 		}

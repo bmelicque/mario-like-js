@@ -4,20 +4,23 @@ SHORTHANDS:
     JUMP_SPEED = 4 * JUMP_HEIGHT / JUMP_TIME
 */
 
+import { playerElementInnerHTML } from "./assets/playerElement.js";
+
 const INTIAL_POSITION = {
 	x: 20,
-	y: 10,
+	y: 30,
 };
-const PLAYER_WIDTH = 5;
-const PLAYER_HEIGHT = 10;
-export const JUMP_SPEED = 80; // 70
+const PLAYER_WIDTH = 3.5;
+const PLAYER_HEIGHT = 6.5;
+const JUMP_HEIGHT = 20; // normalized game length unit
+const JUMP_DURATION = 1; // seconds
 export const MOVEMENT_SPEED = 45;
-
-export const GRAVITY = 160; //120
+export const JUMP_SPEED = (4 * JUMP_HEIGHT) / JUMP_DURATION;
+export const GRAVITY = (8 * JUMP_HEIGHT) / JUMP_DURATION ** 2;
 
 export default class Player {
 	constructor() {
-		this.position = INTIAL_POSITION;
+		this.position = { ...INTIAL_POSITION };
 		this.velocity = {
 			x: 0,
 			y: 0,
@@ -25,11 +28,13 @@ export default class Player {
 		this.width = PLAYER_WIDTH;
 		this.height = PLAYER_HEIGHT;
 		this.airborne = true;
+		this.animationTime = 0;
 	}
 
 	draw() {
 		const playerElement = document.createElement("div");
 		playerElement.classList.add("player");
+		playerElement.innerHTML = playerElementInnerHTML;
 		playerElement.style.transform = `translate(${this.position.x}em, ${this.position.y}em)`;
 		playerElement.style.width = `${this.width}em`;
 		playerElement.style.height = `${this.height}em`;
@@ -38,28 +43,33 @@ export default class Player {
 
 	update(delta) {
 		this.position.x += this.velocity.x * delta;
+		if (this.position.x <= 0) this.position.x = 0;
 		this.position.y += this.velocity.y * delta;
 
 		const playerElement = document.querySelector(".player");
 		playerElement.style.transform = `translate(${this.position.x}em, ${this.position.y}em)`;
+
+		if (this.velocity.x && !this.airborne)
+			playerElement.classList.add("player--running");
+		else playerElement.classList.remove("player--running");
+
+		if (this.velocity.x > 0)
+			playerElement.classList.remove("player--facing-backwards");
+		else if (this.velocity.x < 0)
+			playerElement.classList.add("player--facing-backwards");
+
+		if (this.airborne) playerElement.classList.add("player--airborne");
+		else playerElement.classList.remove("player--airborne");
 	}
 
-	move(pressedKeys, platforms, delta) {
+	move(pressedKeys, delta) {
 		this.velocity.y += delta * GRAVITY;
-		if (pressedKeys.right && !pressedKeys.left && this.position.x < 50)
+		if (pressedKeys.right && !pressedKeys.left)
 			this.velocity.x = MOVEMENT_SPEED;
-		else if (pressedKeys.left && !pressedKeys.right && this.position.x > 15)
+		else if (pressedKeys.left && !pressedKeys.right)
 			this.velocity.x = -MOVEMENT_SPEED;
 		else {
 			this.velocity.x = 0;
-
-			if (pressedKeys.right && !pressedKeys.left)
-				platforms.forEach(
-					(platform) => (platform.velocity.x = -MOVEMENT_SPEED)
-				);
-			else if (pressedKeys.left && !pressedKeys.right)
-				platforms.forEach((platform) => (platform.velocity.x = MOVEMENT_SPEED));
-			else platforms.forEach((platform) => (platform.velocity.x = 0));
 		}
 	}
 
@@ -69,5 +79,14 @@ export default class Player {
 		}
 		this.airborne = true;
 		this.velocity.y = -JUMP_SPEED;
+	}
+
+	reset() {
+		this.position = { ...INTIAL_POSITION };
+		this.velocity = {
+			x: 0,
+			y: 0,
+		};
+		this.airborne = true;
 	}
 }
