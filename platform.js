@@ -36,7 +36,6 @@ export default class Platform {
 		for (let i = 0; i < loops; i++) {
 			platformElement.innerHTML += platformBodyElement;
 		}
-		// platformElement.innerHTML = platformInnerHTML;
 		platformElement.dataset.platform = this.id;
 		platformElement.style.transform = `translate(${this.position.x}em, ${this.position.y}em)`;
 		platformElement.style.width = `${this.width}em`;

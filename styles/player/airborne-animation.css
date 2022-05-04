@@ -1,0 +1,46 @@
+.player--airborne .player__foot--right,
+.player--airborne .player__arm--right {
+    animation: airborne--back-swing 0.2s both;
+}
+.player--airborne .player__foot--left {
+    animation: airborne--front-swing 0.2s both;
+}
+.player--airborne .player__arm--left {
+    animation: airborne--front-rise 0.2s both;
+}
+
+@keyframes airborne--back-swing {
+    0% {
+        transform: rotate(0);
+    }
+    50% {
+        transform: rotate(33.75deg);
+    }
+    100% {
+        transform: rotate(45deg);
+    }
+}
+
+@keyframes airborne--front-swing {
+    0% {
+        transform: rotate(0);
+    }
+    50% {
+        transform: rotate(-33.75deg);
+    }
+    100% {
+        transform: rotate(-45deg);
+    }
+}
+
+@keyframes airborne--front-rise {
+    0% {
+        transform: rotate(0);
+    }
+    50% {
+        transform: rotate(-100deg);
+    }
+    100% {
+        transform: rotate(-135deg);
+    }
+}

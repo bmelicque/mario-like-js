@@ -1,3 +1,5 @@
+@import "./styles/player.css";
+
 * {
     margin: 0;
     box-sizing: border-box;
@@ -14,170 +16,27 @@ body {
     font-size: var(--world-to-pixel-scale);
     overflow: hidden;
     position: relative;
-    background-color: #282828;
+    background-color: #141414;
 }
-
-/**********************
-    PLAYER
-**********************/
-/* PLAYER DESIGN */
-.player {
-    position: absolute;
-    --loop-duration: 0.5s;
-    --half-loop-duration: calc(var(--loop-duration) / 2);
-}
-
-.player__head {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    top: 0;
-    width: 3.5em;
-    height: 3.5em;
-    border-radius: 50%;
-    background-color: white;
-    border: 0.15em solid #888;
-}
-
-.player__body {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    top: 3em;
-    width: 2.5em;
-    height: 3em;
-    border-radius: 50% 50% 50% 50% / 70% 70% 30% 30%;
-    background-color: white;
-    border: 0.15em solid #888;
-    z-index: -10;
-}
-
-.player__arm {
-    aspect-ratio: 1 / 2;
-    border-radius: 50% 50% 50% 50% / 80% 80% 20% 20%;
-}
-
-.player__foot {
-    position: absolute;
-    top: 5.3em;
-    width: 1.8em;
-    height: 1.2em;
-    /* border-radius: 70% 30% 0 0 / 100% 100% 0 0; */
-    border-radius: 70% 50% 20% 20% / 70% 70% 30% 30%;
-    background-color: white;
-    border: 0.15em solid #888;
-    transform: rotate(0);
-    transform-origin: 25% -10%;
-    animation-timing-function: linear;
-}
-.player__foot--left {
-    left: 1.4em;
-    z-index: -20;
-}
-.player__foot--right {
-    left: 0.6em;
-}
-
-.player--facing-backwards .player__direction-wrapper {
-    transform: scaleX(-1);
-}
-
-/* PLAYER RUN ANIMATION */
-.player--running .player__wrapper {
-    animation: walking__body var(--half-loop-duration) infinite linear;
-}
-.player--running .player__foot--left {
-    animation: move-back-foot var(--loop-duration) infinite linear,
-        move-front-foot var(--loop-duration) var(--half-loop-duration) infinite linear;
-}
-.player--running .player__foot--right {
-    animation: move-front-foot var(--loop-duration) infinite linear,
-        move-back-foot var(--loop-duration) var(--half-loop-duration) infinite linear;
-}
-
-@keyframes walking__body {
-    0%,
-    100% {
-        transform: translateY(0);
-    }
-    10% {
-        transform: translateY(-0.5em);
-    }
-    15% {
-        transform: translateY(-0.45em);
-    }
-    50% {
-        transform: translateY(-0.7em);
-        transition-timing-function: ease-in;
-    }
-}
-@keyframes move-front-foot {
-    0%,
-    50% {
-        transform: rotate(0);
-    }
-    5%,
-    45% {
-        transform: rotate(-15deg);
-    }
-    10%,
-    40% {
-        transform: rotate(-35deg);
-    }
-    15%,
-    35% {
-        transform: rotate(-50deg);
-    }
-    20%,
-    30% {
-        transform: rotate(-70deg);
-    }
-    25% {
-        transform: rotate(-75deg);
-    }
-}
-@keyframes move-back-foot {
-    0%,
-    50% {
-        transform: rotate(0);
-    }
-    10%,
-    40% {
-        transform: rotate(25deg);
-    }
-    15% {
-        transform: rotate(45deg);
-    }
-    20% {
-        transform: rotate(90deg);
-    }
-    25% {
-        transform: rotate(115deg);
-    }
-    30% {
-        transform: rotate(75deg);
-    }
-}
-
-/* PLAYER AIRBORNE ANIMATION */
-/* .player--airborne .player__foot--left {
-    animation: move-back-foot var(--loop-duration) 1 linear;
-}
-.player--airborne .player__foot--right {
-    animation: move-front-foot var(--loop-duration) 1 both;
-} */
 
 /**********************
     PLATFORMS
 **********************/
 .platform {
+    --color-ground: #888;
+    --color-dust-light: #bbb; 
+    --color-dust-dark: #555; 
     position: absolute;
-    background-color: #ccc;
+    background-color: var(--color-ground);
     border-radius: 0.5em;
     overflow: hidden;
     display: grid;
     grid-template-columns: repeat(var(--columns), var(--column-width));
     grid-template-rows: repeat(var(--rows), var(--row-height));
+}
+
+.platform--behind {
+    z-index: -10;
 }
 
 .platform__grid-top {
@@ -189,18 +48,19 @@ body {
     top: 0;
     left: 0;
     right: 0;
-    height: 2em;
+    height: 1.25em;
     background-color: #f9f9f9;
     display: flex;
     z-index: 10;
 }
 
 .platform__top-round {
-    width: 4em;
-    height: 4em;
+    width: 2.5em;
+    height: 2em;
     background-color: #f9f9f9;
     border-radius: 50%;
 }
+
 
 .platform__body {
     position: relative;
@@ -210,31 +70,43 @@ body {
 
 .platform__dust {
     position: absolute;
-    width: 5em;
+    border-radius: 999em;
+    background-color: var(--color-dust-dark);
+    width: 0.5em;
     height: 0.5em;
-    border-radius: 0.25em;
-    background-color: #b3b3b3;
+}
+
+.platform__dust:nth-child(2n-1) {
+    width: 1em;
+    height: 1em;
+}
+.platform__dust:nth-child(n+4) {
+    background-color: var(--color-dust-light);
 }
 
 .platform__dust:nth-child(1) {
-    top: 3em;
-    left: 5em;
+    top: 4em;
+    left: 4em;
 }
 .platform__dust:nth-child(2) {
-    top: 6em;
-    left: -3em;
+    top: 11em;
+    left: 6em;
 }
 .platform__dust:nth-child(3) {
     top: 6em;
-    left: 17em;
+    left: 15em;
 }
 .platform__dust:nth-child(4) {
-    top: 9em;
-    left: 2em;
+    top: 3.5em;
+    left: 9em;
 }
 .platform__dust:nth-child(5) {
     top: 12em;
-    left: 11em;
+    left: 2em;
+}
+.platform__dust:nth-child(6) {
+    top: 13em;
+    left: 18em;
 }
 
 .goal {

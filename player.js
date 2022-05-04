@@ -11,7 +11,7 @@ const INTIAL_POSITION = {
 	y: 30,
 };
 const PLAYER_WIDTH = 3.5;
-const PLAYER_HEIGHT = 6.5;
+const PLAYER_HEIGHT = 4.4;
 const JUMP_HEIGHT = 20; // normalized game length unit
 const JUMP_DURATION = 1; // seconds
 export const MOVEMENT_SPEED = 45;

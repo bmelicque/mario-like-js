@@ -1,0 +1,21 @@
+.player {
+    position: absolute;
+    /* background: red; */
+    --color-helmet: #a9e0ef;
+    --color-suit: #e0e0e0;
+    --color-suit-dark: #b0b0b0;
+    --color-suit-light: #fff;
+    --color-suit-glove: #555;
+    --color-suit-glove-dark: #383838;
+    --color-hair: #282828;
+    --color-eyes: #282828;
+    --color-skin: #f2c098;
+    --color-skin-dark: #d38172;
+    --color-red: #d52f61;
+    --color-blue: #01b0ae;
+    --color-green: #93c534;
+}
+
+.player--facing-backwards .player__direction-wrapper {
+    transform: scaleX(-1);
+}

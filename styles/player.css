@@ -1,0 +1,5 @@
+@import "./player/base.css";
+@import "./player/head.css";
+@import "./player/body.css";
+@import "./player/run-animation.css";
+@import "./player/airborne-animation.css";

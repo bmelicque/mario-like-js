@@ -1,0 +1,113 @@
+.player__head {
+    position: absolute;
+    top: 0;
+    height: 1.5em;
+    width: 3em;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 0.75em 0.75em 0 0;
+    border: 1px solid var(--color-helmet);
+    margin: 0;
+    overflow: hidden;
+}
+.player__head::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--color-helmet);
+    opacity: 0.2;
+}
+.player__head::after {
+    content: "";
+    position: absolute;
+    height: 250%;
+    width: 30%;
+    top: -50%;
+    left: 30%;
+    z-index: 100;
+    background-color: var(--color-helmet);
+    opacity: 0.5;
+    transform: rotate(45deg);
+}
+
+.player__hair {
+    position: absolute;
+    height: 40%;
+    width: 70%;
+    top: 10%;
+    left: 20%;
+    background-color: var(--color-hair);
+    z-index: 10;
+    border-radius: 999em;
+}
+.player__hair::before {
+    content: "";
+    position: absolute;
+    width: 30%;
+    height: 220%;
+    left: 0;
+    top: 0;
+    transform: translate(-55%, 30%);
+    border-radius: 999em;
+    background-color: var(--color-hair);
+}
+.player__hair::after {
+    content: "";
+    position: absolute;
+    width: 30%;
+    aspect-ratio: 1;
+    left: 0;
+    top: 50%;
+    border-radius: 999em;
+    background-color: var(--color-hair);
+}
+
+.player__face {
+    position: absolute;
+    height: 55%;
+    width: 70%;
+    bottom: 0;
+    left: 10%;
+    background-color: #f2c098;
+    z-index: -10;
+}
+
+.player__eye {
+    position: absolute;
+    height: 50%;
+    width: 0.1em;
+    bottom: 10%;
+    background-color: var(--color-eyes);
+    border-radius: 999em;
+}
+.player__eye--left {
+    right: 10%;
+}
+.player__eye--right {
+    right: 30%;
+}
+
+.player__ear {
+    position: absolute;
+    height: 0.4em;
+    width: 0.4em;
+    top: 60%;
+    left: 15%;
+    z-index: 10;
+    border-radius: 999em;
+    background-color: var(--color-skin);
+}
+
+.player__ear::after {
+    content: "";
+    position: absolute;
+    height: 0.2em;
+    width: 0.2em;
+    top: 0.1em;
+    left: 0.1em;
+    border-radius: 999em;
+    background-color: var(--color-skin-dark);
+}
