@@ -23,12 +23,16 @@ body {
     PLATFORMS
 **********************/
 .platform {
-    --color-ground: #888;
-    --color-dust-light: #bbb; 
-    --color-dust-dark: #555; 
+    --color-ground: #444;
+    --color-ground-dark: #333;
+    --color-ground-light: #555;
+    --color-top: #d0d0d0;
+    --color-top-dark: #888;
+    --color-dust-light: #bbb;
+    --color-dust-dark: #555;
     position: absolute;
     background-color: var(--color-ground);
-    border-radius: 0.5em;
+    border-radius: 0.25em;
     overflow: hidden;
     display: grid;
     grid-template-columns: repeat(var(--columns), var(--column-width));
@@ -36,6 +40,9 @@ body {
 }
 
 .platform--behind {
+    --color-ground: #282828;
+    --color-ground-dark: #181818;
+    --color-ground-light: #383838;
     z-index: -10;
 }
 
@@ -48,19 +55,30 @@ body {
     top: 0;
     left: 0;
     right: 0;
-    height: 1.25em;
-    background-color: #f9f9f9;
-    display: flex;
+    height: 1em;
+    background-color: var(--color-top);
     z-index: 10;
 }
-
-.platform__top-round {
-    width: 2.5em;
-    height: 2em;
-    background-color: #f9f9f9;
-    border-radius: 50%;
+.platform__top::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 0.3em;
+    background-color: var(--color-top-dark);
 }
-
+.platform__top::before {
+    content: "";
+    position: absolute;
+    bottom: -0.7em;
+    left: 0;
+    right: 0;
+    height: 0.7em;
+    background-color: var(--color-ground-dark);
+    display: flex;
+    z-index: -10;
+}
 
 .platform__body {
     position: relative;
@@ -70,45 +88,74 @@ body {
 
 .platform__dust {
     position: absolute;
-    border-radius: 999em;
+    border-radius: 0.25em;
     background-color: var(--color-dust-dark);
     width: 0.5em;
     height: 0.5em;
 }
 
-.platform__dust:nth-child(2n-1) {
-    width: 1em;
-    height: 1em;
+.platform__pebble {
+    --size: 0.5em;
+    --color: var(--color-ground-dark);
+    position: absolute;
+    border-radius: 0.25em;
+    background-color: var(--color);
+    width: var(--size);
+    height: var(--size);
 }
-.platform__dust:nth-child(n+4) {
+.platform__pebble--big {
+    --size: 1em;
+}
+.platform__pebble--square {
+    --size: 2em;
+    transform: rotate(30deg);
+    border-radius: 0.5em;
+}
+.platform__pebble--light {
+    --color: var(--color-ground-light);
+}
+
+.platform__dust:nth-child(n + 4) {
     background-color: var(--color-dust-light);
 }
 
-.platform__dust:nth-child(1) {
-    top: 4em;
-    left: 4em;
-}
-.platform__dust:nth-child(2) {
-    top: 11em;
-    left: 6em;
-}
-.platform__dust:nth-child(3) {
+.platform__pebble:nth-child(1) {
+    left: 5em;
     top: 6em;
-    left: 15em;
 }
-.platform__dust:nth-child(4) {
-    top: 3.5em;
-    left: 9em;
+.platform__pebble:nth-child(2) {
+    transform: rotate(-15deg);
+    left: 12em;
+    top: 7em;
 }
-.platform__dust:nth-child(5) {
-    top: 12em;
-    left: 2em;
+.platform__pebble:nth-child(3) {
+    left: 1.5em;
+    top: 3em;
 }
-.platform__dust:nth-child(6) {
-    top: 13em;
-    left: 18em;
+.platform__pebble:nth-child(4) {
+    left: 11em;
+    top: 4em;
+}
+.platform__pebble:nth-child(5) {
+    left: 17em;
+    top: 9em;
+}
+.platform__pebble:nth-child(6) {
+    left: 7em;
+    top: 2.5em;
+}
+.platform__pebble:nth-child(7) {
+    left: 16em;
+    top: 4.5em;
+}
+.platform__pebble:nth-child(8) {
+    left: 3.5em;
+    top: 11em;
 }
 
+/******************************
+    GOAL
+******************************/
 .goal {
     position: absolute;
     background-color: green;

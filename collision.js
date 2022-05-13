@@ -37,7 +37,24 @@ export default function detectCollision(player, element, delta) {
 	if (vertical === undefined)
 		return horizontal > 0 ? DIRECTIONS.FROM_RIGHT : DIRECTIONS.FROM_LEFT;
 
-	// const direction = vertical / horizontal;
+	const tan = vertical / horizontal;
+
+	if (horizontal > 0 && vertical > 0)
+		return tan > playerRects.direction
+			? DIRECTIONS.FROM_BELOW
+			: DIRECTIONS.FROM_RIGHT;
+	if (horizontal > 0 && vertical < 0)
+		return tan > playerRects.direction
+			? DIRECTIONS.FROM_TOP
+			: DIRECTIONS.FROM_RIGHT;
+	if (horizontal < 0 && vertical > 0)
+		return tan > playerRects.direction
+			? DIRECTIONS.FROM_BELOW
+			: DIRECTIONS.FROM_LEFT;
+	if (horizontal < 0 && vertical < 0)
+		return tan > playerRects.direction
+			? DIRECTIONS.FROM_TOP
+			: DIRECTIONS.FROM_LEFT;
 
 	return;
 }

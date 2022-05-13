@@ -1,8 +1,6 @@
-import detectCollision from "./collision.js";
-import Goal from "./goal.js";
-import { levelGoal, levelPlatforms } from "./lib/levels/level-1.js";
-import Platform from "./platform.js";
-import Player from "./player.js";
+import levelData from "./lib/levels/index.js";
+import Player from "./lib/models/player.js";
+import Level from "./lib/models/level.js";
 
 const MAX_X = 50;
 const MIN_X = 15;
@@ -29,18 +27,8 @@ function setPixelToWorldScale() {
 	worldElement.style.height = `${WORLD_HEIGHT * worldToPixelScale}px`;
 }
 
-const goal = new Goal({ ...levelGoal });
-const platforms = levelPlatforms.map(
-	(platform, index) =>
-		new Platform({
-			...platform,
-			id: index,
-		})
-);
+const level = new Level(1);
 const player = new Player();
-
-goal.draw();
-platforms.forEach((platform) => platform.draw());
 player.draw();
 
 const pressedKeys = {
@@ -63,28 +51,28 @@ function animate(time) {
 	if (player.position.y + player.height >= WORLD_HEIGHT) player.reset();
 
 	player.airborne = true;
-	platforms.forEach((platform) => platform.handleCollision(player, delta));
-
-	const levelElement = document.querySelector("[data-level]");
+	level.platforms.forEach((platform) =>
+		platform.handleCollision(player, delta)
+	);
 
 	player.update(delta);
 	if (player.position.x > scrollOffset + MAX_X) {
 		scrollOffset = player.position.x - MAX_X;
-		levelElement.style.transform = `translateX(-${scrollOffset}em)`;
+		level.scroll(scrollOffset);
 	} else if (player.position.x < scrollOffset + MIN_X && scrollOffset > 0) {
 		scrollOffset = player.position.x - MIN_X;
-		levelElement.style.transform = `translateX(-${scrollOffset}em)`;
+		level.scroll(scrollOffset);
 	}
 
-	if (detectCollision(player, goal, delta)) {
-		console.log("you win!");
-	}
+	level.handleGoal(player, delta);
 
 	lastTime = time;
 	requestAnimationFrame(animate);
 }
 
 animate();
+
+addEventListener("keydown", () => console.log("Init"), { once: true });
 
 addEventListener("keydown", (e) => {
 	const keyCode = e.keyCode || e.key;
@@ -124,3 +112,7 @@ addEventListener("keyup", (e) => {
 			null;
 	}
 });
+
+function getLevelData(levelId) {
+	return levelData[levelId];
+}
