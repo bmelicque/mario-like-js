@@ -6,6 +6,13 @@ export const DIRECTIONS = {
 	FROM_LEFT: 4,
 };
 
+export const COLLISIONS = {
+	HORIZONTAL_STOP: "h_stop",
+	VERTICAL_STOP: "v_stop",
+	LANDING: "landing",
+	PLAYER_DAMAGE: "player_dmg",
+}
+
 export default function detectCollision(player, element, delta) {
 	const playerRects = getRects(player, delta);
 	const elementRects = getRects(element, delta);
@@ -64,13 +71,13 @@ function getRects(element, delta) {
 	const bottom = element.position.y + element.height;
 	const left = element.position.x;
 	const right = element.position.x + element.width;
-	const deltaX = element.velocity?.x * delta || 0;
-	const deltaY = element.velocity?.y * delta || 0;
+	const deltaX = element.speed?.x * delta || 0;
+	const deltaY = element.speed?.y * delta || 0;
 	const nextTop = top + deltaY;
 	const nextBottom = bottom + deltaY;
 	const nextLeft = left + deltaX;
 	const nextRight = right + deltaX;
-	const direction = element.velocity?.y / element.velocity?.x;
+	const direction = element.speed?.y / element.speed?.x;
 
 	return {
 		top,

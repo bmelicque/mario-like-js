@@ -66,3 +66,8 @@ Combining the equations above, we get:
 
 ``JUMP_SPEED = 4 * JUMP_HEIGHT / JUMP_DURATION`` \
 ``GRAVITY = -8 * JUMP_HEIGHT / (JUMP_DURATION ²)``
+
+## VECTORIAL PRODUCT?
+
+`` (a.x2-a.x1) * (b.x-a.x1) - (a.y2-a.y1) * (b.y-a.y1) < 0``
+`` (a.x2-a.x1) * (b.x-a.x1) < (a.y2-a.y1) * (b.y-a.y1) ``

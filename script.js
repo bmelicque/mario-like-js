@@ -1,6 +1,6 @@
-import levelData from "./lib/levels/index.js";
 import Player from "./lib/models/player.js";
 import Level from "./lib/models/level.js";
+import Clock from "./lib/models/clock.js";
 
 const MAX_X = 50;
 const MIN_X = 15;
@@ -29,33 +29,22 @@ function setPixelToWorldScale() {
 
 const level = new Level(1);
 const player = new Player();
-player.draw();
 
 const pressedKeys = {
 	right: false,
 	left: false,
+	jump: false,
 };
 
-let lastTime;
+window._Clock = new Clock();
+const clock = window._Clock;
+
 let scrollOffset = 0;
 function animate(time) {
-	if (!lastTime) {
-		lastTime = time;
-		requestAnimationFrame(animate);
-		return;
-	}
-	const delta = (time - lastTime) / 1000; // in seconds
+	if (!clock.update(time)) return requestAnimationFrame(animate);
 
-	player.move(pressedKeys, delta);
+    player.update(pressedKeys, level.platforms)
 
-	if (player.position.y + player.height >= WORLD_HEIGHT) player.reset();
-
-	player.airborne = true;
-	level.platforms.forEach((platform) =>
-		platform.handleCollision(player, delta)
-	);
-
-	player.update(delta);
 	if (player.position.x > scrollOffset + MAX_X) {
 		scrollOffset = player.position.x - MAX_X;
 		level.scroll(scrollOffset);
@@ -64,9 +53,8 @@ function animate(time) {
 		level.scroll(scrollOffset);
 	}
 
-	level.handleGoal(player, delta);
+	level.handleGoal(player);
 
-	lastTime = time;
 	requestAnimationFrame(animate);
 }
 
@@ -90,7 +78,7 @@ addEventListener("keydown", (e) => {
 		case 38:
 		case 87:
 		case 90:
-			player.jump();
+			pressedKeys.jump = true;
 			break;
 		default:
 			null;
@@ -108,11 +96,13 @@ addEventListener("keyup", (e) => {
 		case 68:
 			pressedKeys.right = false;
 			break;
+		case 32:
+		case 38:
+		case 87:
+		case 90:
+			pressedKeys.jump = false;
+			break;
 		default:
 			null;
 	}
 });
-
-function getLevelData(levelId) {
-	return levelData[levelId];
-}
