@@ -1,10 +1,7 @@
 import Player from "./lib/models/player.js";
 import Level from "./lib/models/level.js";
 import Clock from "./lib/models/clock.js";
-import Item from "./lib/models/item.js";
 
-const MAX_X = 50;
-const MIN_X = 15;
 export const WORLD_WIDTH = 100;
 export const WORLD_HEIGHT = 55;
 
@@ -40,41 +37,24 @@ const pressedKeys = {
 window._Clock = new Clock();
 const clock = window._Clock;
 
-let scrollOffset = 0;
 function animate(time) {
 	if (!clock.update(time)) return requestAnimationFrame(animate);
 
-	// handle inputs
 	player.handleInputs(pressedKeys);
 
-	// handle gravity and acceleration for player and ennemies
 	player.handleGravity();
 
-	// detect player and ennmy collisions against platforms
 	player.handleLevelCollisions(level.platforms);
 
-	// detect item pickup
 	level.handleItemCollisions(player);
 
-	// detect level completion
 	level.handleGoal(player);
 
-	// update positions
 	player.updatePosition();
 
-	// update sprites
 	player.updateSprite();
 
-	// scroll
-	if (player.position.x > scrollOffset + MAX_X) {
-		scrollOffset = player.position.x - MAX_X;
-		level.scroll(scrollOffset);
-	} else if (player.position.x < scrollOffset + MIN_X && scrollOffset > 0) {
-		scrollOffset = player.position.x - MIN_X;
-		level.scroll(scrollOffset);
-	}
-
-	console.log(player.inventory.length);
+	level.scroll(player);
 
 	requestAnimationFrame(animate);
 }
