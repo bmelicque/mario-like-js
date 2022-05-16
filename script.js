@@ -1,6 +1,7 @@
 import Player from "./lib/models/player.js";
 import Level from "./lib/models/level.js";
 import Clock from "./lib/models/clock.js";
+import Item from "./lib/models/item.js";
 
 const MAX_X = 50;
 const MIN_X = 15;
@@ -43,8 +44,28 @@ let scrollOffset = 0;
 function animate(time) {
 	if (!clock.update(time)) return requestAnimationFrame(animate);
 
-    player.update(pressedKeys, level.platforms)
+	// handle inputs
+	player.handleInputs(pressedKeys);
 
+	// handle gravity and acceleration for player and ennemies
+	player.handleGravity();
+
+	// detect player and ennmy collisions against platforms
+	player.handleLevelCollisions(level.platforms);
+
+	// detect item pickup
+	level.handleItemCollisions(player);
+
+	// detect level completion
+	level.handleGoal(player);
+
+	// update positions
+	player.updatePosition();
+
+	// update sprites
+	player.updateSprite();
+
+	// scroll
 	if (player.position.x > scrollOffset + MAX_X) {
 		scrollOffset = player.position.x - MAX_X;
 		level.scroll(scrollOffset);
@@ -53,7 +74,7 @@ function animate(time) {
 		level.scroll(scrollOffset);
 	}
 
-	level.handleGoal(player);
+	console.log(player.inventory.length);
 
 	requestAnimationFrame(animate);
 }

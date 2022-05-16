@@ -20,6 +20,14 @@ body {
 }
 
 /**********************
+    ITEMS
+**********************/
+.item {
+    position: absolute;
+    background-color: red;
+}
+
+/**********************
     PLATFORMS
 **********************/
 .platform {
