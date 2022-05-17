@@ -1,6 +1,7 @@
 import Player from "./lib/models/player.js";
 import Level from "./lib/models/level.js";
 import Clock from "./lib/models/clock.js";
+import Inputs from "./lib/models/inputs.js";
 
 export const WORLD_WIDTH = 100;
 export const WORLD_HEIGHT = 55;
@@ -25,14 +26,11 @@ function setPixelToWorldScale() {
 	worldElement.style.height = `${WORLD_HEIGHT * worldToPixelScale}px`;
 }
 
+const inputs = new Inputs();
+inputs.addEventListeners();
+
 const level = new Level(1);
 const player = new Player();
-
-const pressedKeys = {
-	right: false,
-	left: false,
-	jump: false,
-};
 
 window._Clock = new Clock();
 const clock = window._Clock;
@@ -40,7 +38,7 @@ const clock = window._Clock;
 function animate(time) {
 	if (!clock.update(time)) return requestAnimationFrame(animate);
 
-	player.handleInputs(pressedKeys);
+	player.handleInputs(inputs);
 
 	player.handleGravity();
 
@@ -60,50 +58,3 @@ function animate(time) {
 }
 
 animate();
-
-addEventListener("keydown", () => console.log("Init"), { once: true });
-
-addEventListener("keydown", (e) => {
-	const keyCode = e.keyCode || e.key;
-	switch (keyCode) {
-		case 37:
-		case 65:
-		case 81:
-			pressedKeys.left = true;
-			break;
-		case 39:
-		case 68:
-			pressedKeys.right = true;
-			break;
-		case 32:
-		case 38:
-		case 87:
-		case 90:
-			pressedKeys.jump = true;
-			break;
-		default:
-			null;
-	}
-});
-addEventListener("keyup", (e) => {
-	const keyCode = e.keyCode || e.key;
-	switch (keyCode) {
-		case 37:
-		case 65:
-		case 81:
-			pressedKeys.left = false;
-			break;
-		case 39:
-		case 68:
-			pressedKeys.right = false;
-			break;
-		case 32:
-		case 38:
-		case 87:
-		case 90:
-			pressedKeys.jump = false;
-			break;
-		default:
-			null;
-	}
-});
