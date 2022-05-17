@@ -12,8 +12,13 @@ body {
 }
 
 #world {
-    --world-to-pixel-scale: 1px;
-    font-size: var(--world-to-pixel-scale);
+    --aspect-ratio: calc(16 / 9);
+    width: 100vw;
+    max-width: calc(100vh * var(--aspect-ratio));
+    height: 100vh;
+    max-height: calc(100vw / var(--aspect-ratio));
+    font-size: min(1vw, calc(1vh * var(--aspect-ratio)));
+
     overflow: hidden;
     position: relative;
     background-color: #141414;
